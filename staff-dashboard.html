@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - Hotel Booking System</title>
+    <link rel="stylesheet" href="staff-styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>🏨 Staff Dashboard</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="showDashboard()">Home</a></li>
+                <li><a href="#" onclick="showAddBooking()">Add Booking</a></li>
+                <li><a href="#" onclick="logout()" class="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Dashboard Page -->
+        <div id="dashboardPage">
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-info">
+                        <h3 id="totalBookings">0</h3>
+                        <p>Total Bookings</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">₹0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛏️</div>
+                    <div class="stat-info">
+                        <h3 id="todayCheckIns">0</h3>
+                        <p>Check-ins Today</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings Table -->
+            <div class="table-container">
+                <h2>All Bookings</h2>
+                <div class="table-wrapper">
+                    <table id="bookingsTable">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Guest Name</th>
+                                <th>Check-in</th>
+                                <th>Check-out</th>
+                                <th>Guests</th>
+                                <th>Room Type</th>
+                                <th>Total Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+                            <tr>
+                                <td colspan="8" class="no-data">No bookings found. Add your first booking!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Booking Page -->
+        <div id="addBookingPage" style="display: none;">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>Add New Booking</h2>
+            <form id="addBookingForm" class="booking-form">
+                <div class="form-group">
+                    <label for="guestName">Guest Name *</label>
+                    <input type="text" id="guestName" name="name" required placeholder="Enter guest name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkInDate">Check-in Date *</label>
+                        <input type="date" id="checkInDate" name="checkin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkOutDate">Check-out Date *</label>
+                        <input type="date" id="checkOutDate" name="checkout" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="numGuests">Number of Guests *</label>
+                        <input type="number" id="numGuests" name="guests" min="1" max="10" required placeholder="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="roomTypeSelect">Room Type *</label>
+                        <select id="roomTypeSelect" name="roomType" required>
+                            <option value="">Select Room Type</option>
+                            <option value="Single Room">Single Room - ₹1000/night</option>
+                            <option value="Double Room">Double Room - ₹1800/night</option>
+                            <option value="Suite Room">Suite Room - ₹3000/night</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Add Booking</button>
+            </form>
+        </div>
+
+        <!-- View Details Modal -->
+        <div id="detailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeDetailsModal()">&times;</span>
+                <h2>Booking Details</h2>
+                <div id="bookingDetails" class="details-content"></div>
+                <button class="submit-btn" onclick="closeDetailsModal()">Close</button>
+            </div>
+        </div>
+
+        <!-- Edit Booking Modal -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeEditModal()">&times;</span>
+                <h2>Edit Booking</h2>
+                <form id="editBookingForm" class="booking-form">
+                    <input type="hidden" id="editBookingId" name="bookingId">
+                    
+                    <div class="form-group">
+                        <label for="editGuestName">Guest Name *</label>
+                        <input type="text" id="editGuestName" name="name" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editCheckIn">Check-in Date *</label>
+                            <input type="date" id="editCheckIn" name="checkin" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCheckOut">Check-out Date *</label>
+                            <input type="date" id="editCheckOut" name="checkout" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editGuests">Number of Guests *</label>
+                            <input type="number" id="editGuests" name="guests" min="1" max="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editRoomType">Room Type *</label>
+                            <select id="editRoomType" name="roomType" required>
+                                <option value="Single Room">Single Room - ₹1000/night</option>
+                                <option value="Double Room">Double Room - ₹1800/night</option>
+                                <option value="Suite Room">Suite Room - ₹3000/night</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Update Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="staff-dashboard.js"></script>
+</body>
+</html>
